@@ -51,11 +51,17 @@ def quad_clockwise_spiral_paths(dimension, time_step):
     current_paths = [[0, 0], [0, col_size - 1], [row_size - 1, col_size - 1], 
                      [row_size - 1, 0]]
     
+    # Set a way to check for overlap and add initial tuples in 
     visited = set()
-    
+
+    for path in paths: 
+        visited.add(path[-1])
+    print(visited)
     stopped = [False, False, False, False]
     # Loop by the amount of the given time
     for i in range(time_step):
+        if len(visited) == row_size*col_size:
+            break
         # For each time step append a new tuple in each path of paths
         # using the index of path to find and modify its other variables
         for index, path in enumerate(paths[:]):
@@ -63,14 +69,14 @@ def quad_clockwise_spiral_paths(dimension, time_step):
             # the most recent tuple is within its limits and modify future 
             # tuple or direction accordingly if our of limits stop current and 
             # any future tuples from being added
-            
+            x, y = current_paths[index]
             if path[0] == "right":
                 if stopped[index] is True:
                     continue
-                elif current_paths[index][1]  < boundary["right"] and (current_paths[index][0], current_paths[index][1] + 1) not in visited:
+                elif y  < boundary["right"] and (x, y + 1) not in visited:
                     
                     current_paths[index][1] += 1      
-                elif (current_paths[index][0] + 1, current_paths[index][1]) in visited: 
+                elif (x + 1, y) in visited: 
                     stopped[index] = True
                     continue
                 else:
@@ -80,10 +86,10 @@ def quad_clockwise_spiral_paths(dimension, time_step):
             if path[0] == "bottom":
                 if stopped[index] is True:
                     continue
-                elif current_paths[index][0]  < boundary["bottom"] and (current_paths[index][0] + 1, current_paths[index][1]) not in visited:
+                elif x  < boundary["bottom"] and (x + 1, y) not in visited:
                     
                     current_paths[index][0] += 1
-                elif (current_paths[index][0], current_paths[index][1]-1) in visited:
+                elif (x, y - 1) in visited:
                     stopped[index] = True
                     continue
                 else:
@@ -96,11 +102,11 @@ def quad_clockwise_spiral_paths(dimension, time_step):
                 
                 if stopped[index] is True:
                     continue
-                elif current_paths[index][1] > boundary["left"] and (current_paths[index][0], current_paths[index][1] - 1 ) not in visited:
+                elif y > boundary["left"] and (x, y - 1) not in visited:
                     
                     
                     current_paths[index][1] -= 1
-                elif (current_paths[index][0]-1, current_paths[index][1]) in visited:
+                elif (x - 1, y) in visited:
                     
                     stopped[index] = True
                     continue
@@ -113,10 +119,10 @@ def quad_clockwise_spiral_paths(dimension, time_step):
                 if stopped[index] is True:
                     
                     continue
-                elif current_paths[index][0] > boundary["top"] and (current_paths[index][0] - 1, current_paths[index][1]  ) not in visited:
+                elif x > boundary["top"] and (x - 1, y) not in visited:
                     
                     current_paths[index][0] -= 1
-                elif (current_paths[index][0], current_paths[index][1] + 1) in visited:
+                elif (x, y + 1) in visited:
                     
                     stopped[index] = True
                     continue
@@ -134,7 +140,7 @@ def quad_clockwise_spiral_paths(dimension, time_step):
         del path[0]
     return paths
 
-dimension = (10,5) 
-paths_t12 = quad_clockwise_spiral_paths(dimension, 30)
+dimension = (2,2) 
+paths_t12 = quad_clockwise_spiral_paths(dimension, 10090)
 print(paths_t12)
 visualise_paths(paths_t12, dimension)        
